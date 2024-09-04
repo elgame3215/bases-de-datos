@@ -1,0 +1,34 @@
+
+
+cliente <codigo (PK),
+	nombre, dni, ciudad, fechaNac, documento,
+	numero(FK)>
+
+tarjeta <numero (PK),
+	nombre, codigo, fechaVenc,
+	codigo (FK)>
+
+sucursal <numero (PK),
+	domicilio, ciudad>
+
+empleado <legajo (PK),
+	dni, nombre, {telefonos},
+	(
+		domicilio_ciudad
+		domicilio_calle
+		domicilio_numero
+	)>
+
+producto <codigo (PK),
+	descripcion, color, costo>
+
+fabrica <CUIT (PK),
+	nombre, pais, gerente, cantEmp,
+	codigo (FK)>
+
+trabaja <numero (PK, FK), legajo (PK, FK),
+	dia, horario>
+
+vende <numero (PK, FK), codigo (PK, FK),
+	precio_venta>
+

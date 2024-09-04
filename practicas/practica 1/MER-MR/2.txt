@@ -1,0 +1,32 @@
+
+
+proveedor <CUIT (PK),
+	nombre, web, telefono,
+	(
+		direccion_ciudad
+		direccion_comuna
+		direccion_calle
+		direccion_numero
+	),
+	id_producto (FK)>
+
+producto <id_producto (PK),
+	nombre, precio, stock,
+	id_categoria (FK)>
+
+venta <nro_factura (PK),
+	descuento, fecha, montoFinal,
+	CUIT (FK)>
+
+cliente <CUIT (PK),
+	nombre, {telefono},
+	(
+		direccion_ciudad
+		direccion_comuna
+		direccion_calle
+		direccion_numero
+	)>
+
+participa <id_producto (PK, FK), nro_factura (PK, FK),
+	montoTotalProducto, cantidad_vta_unidad, precio_unidad>
+

@@ -1,0 +1,17 @@
+
+
+planta <color (PK),
+	superficie, ({proceso_nombre, proceso_grado_complejidad})>
+
+maquina <numero (PK),
+	marca, modelo,
+	color (FK)>
+
+tecnico <dni (PK),
+	nyAp, fecNac, {telefono}>
+
+opera <numero (PK, FK), dni (PK, FK),
+	turno, (periodo_fecha_inicio, periodo_fecha_fin)>
+
+reemplaza <numero (PK, FK), numero_esReemplazado (PK, FK)>
+
