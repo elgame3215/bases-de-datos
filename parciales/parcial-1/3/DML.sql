@@ -42,7 +42,7 @@ CREATE TABLE objeto_magico (
 CREATE TABLE evento (
 	lugar 	VARCHAR(50),
 	horario TIME,
-	limite 	TIME,
+	limite 	INT,
 	CONSTRAINT PK_evento PRIMARY KEY (
 		lugar,
 		horario
@@ -98,3 +98,18 @@ CREATE TABLE se_usa_en (
 		momento
 	)
 );
+
+ALTER TABLE evento
+	ADD CONSTRAINT CHK_evento_limite CHECK (
+		60 <= limite AND limite <= 120
+	);
+
+ALTER TABLE personaje
+	ADD CONSTRAINT CHK_personaje_ciudad CHECK (
+		ciudad IN (
+			"Sahara",
+			"Tundratown",
+			"Rainforest",
+			"Savanna"
+		)
+	)
