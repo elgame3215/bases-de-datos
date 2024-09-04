@@ -1,0 +1,11 @@
+personaje <nombre_pi (PK), escuela (PK), ciudad>
+
+elemento <nombre_elem (PK), origen, es_especial>
+
+objeto_magico <nombre_obj (PK), momento (PK), es_maligno, nombre_pi (FK), escuela (FK)>
+
+evento <horario (PK), lugar (PK), limite, nombre_obj (FK), momento (FK)>
+
+activa <nombre_pi (PK, FK), escuela (PK, FK), nombre_elem (PK, FK), fecha (PK)>
+
+se_usa_en <lugar (PK, FK), horario (PK, FK), nombre_obj (PK, FK), momento (PK, FK)>

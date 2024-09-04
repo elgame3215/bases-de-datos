@@ -1,0 +1,13 @@
+agencia <(numeroAgencia_numLocal (PK), numeroAgencia_numSucursal (PK)), nombreAgencia>
+
+paquete <nombrePaquete (PK), descuento?, precio, numeroAgencia_numLocal (FK), numeroAgencia_numSucursal (FK)>
+
+excursion <dia (PK) hora (PK), nombrePaquete (PK, FK), lugar, conGuia>
+
+vuelo <aerolinea (PK), nroVuelo (PK), horarioLlegada, horarioSalida, destino>
+
+cliente <NroPasaporte (PK), apellido, fecNac, tarjetaDeCredito, nombrePaquete (FK)>
+
+equipaje <nroEquipaje (PK) NroPasaporte (PK, FK), marca, color, tipo, peso>
+
+incluye <nombrePaquete (PK, FK), nroVuelo (PK, FK), aerolinea (PK, FK)>
