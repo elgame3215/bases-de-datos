@@ -1,0 +1,124 @@
+
+ BARCO <matricula (PK),
+ codPaisBandera (FK),
+ nombre, capacidad>
+
+ PUERTO <codPuerto (PK),
+ codPais (FK),
+ nombre>
+
+ PAIS <codPais (PK), nombrePais, continente, gradoCorrupcion>
+
+ REGISTRO_PUERTO <fechaEntrada (PK),
+ codPuerto (PK,FK), matricula (PK,FK),
+ fechaSalida>
+
+ EMPLEADO <legajo (PK),
+ nombreEmpleado>
+
+ TAREA <legajo (PK,FK), codPuerto (PK,FK), fechaInicio (PK),
+ fechaFin>
+
+ Se tiene el siguiente esquema de BD que describe el funcionamiento de una a compañía naviera que lleva
+ cargas con diferentes barcos entre diferentes países:
+ Escriba las expresiones en álgebra relacional que permitan obtener:
+ 1. Los nombres de los países por los que pasó el barco de matrícula XTW8930 durante el 2023.
+ 2. Las matrículas de los barcos que estaban en un puerto de un país muy corrupto (grado de
+ corrupción > 7) el 01/03/2023.
+ 3. Las matrículas de los que estaban navegando (esto es, en ningún puerto) el 01/03/2023. Ayuda: son
+ todos menos los que estaban en algún puerto.
+ 4. Las matrículas de los barcos que estaban en un puerto del país de su bandera el 01/03/2023.
+ 5. Nombres delos barcos que pararon en todos los puertos de Brasil.
+ 6. Nombres delos barcos que pararon en todos los continentes (sólo nos interesan los continentes de
+ los países cargados).
+ 7. Nombres delos empleados que conocen todos los continentes.
+ 8. Nombres delos puertos en los que en 2023 pasó el barco XTW8930 pero no trabajó el empleado de
+ legajo 486.
+ 9. Nombres delas parejas de países (A,B) tales que el grado de corrupción de B es dos puntos mayor
+ que el de A. Por ejemplo, si en Kazasthán es 3, en Nepal es 5, y en Maldivas es 7, entonces en la
+ respuesta deben incluirse (Kazasthán, Nepal) y (Nepal, Maldivas).
+
+1)
+P <nombrePais> (
+	S <matricula = 'XTW8930' ^
+	fechaEntrada BETWEEN 01-01-2023 AND 31-12-2023> (
+		Pais * Puerto * Registro_Puerto
+	)
+)
+
+2)
+P <matricula> (
+	S <gradoCorrupcion > 7 ^
+	fechaEntrada <= 01-03-2023 ^
+	fechaSalida >= 01-03-2023> (
+		Registro_Puerto * Puerto * Pais
+	)
+)
+
+3)
+Barco - (
+	P <matricula (PK),
+	  codPaisBandera (FK),
+	  nombre, capacidad> (
+			S <	fechaEntrada <= 01-03-2023 ^
+					fechaSalida  >= 01-03-2023> (
+						Barco * Registro_Puerto
+		)
+	)
+)
+
+4)
+P <matricula> (
+	S <codPais = codPaisBandera ^
+		fechaEntrada <= 01-03-2023 ^
+		fechaSalida  >= 01-03-2023> (
+			Pais * Registro_Puerto
+		)
+)
+
+5)
+P <nombre> (
+	S <pais = 'Brasil'> (
+		Barco * Registro_Puerto * (R <codPuerto, codPais, nombre_puerto> Puerto) * Pais
+	)
+)
+
+6)
+P <nombre> (
+	(Barco * Registro_Puerto * (R <codPuerto, codPais, nombre_puerto> Puerto) * Pais) /
+	P <continente> Pais
+)
+
+7)
+P <nombreEmpleado> (
+	(Empleado * Tarea * Puerto * Pais) /
+	P <continente> Pais
+)
+
+8)
+P <nombre> (
+	P <nombre> (
+		S < fechaEntrada >= 01-01-2023 ^
+				fechaSalida <= 31-12-2023> (
+					Puerto * Registro_Puerto
+		)
+	)
+	-
+	P <nombre> (
+		S <legajo = 486> (
+			Tarea * Puerto
+		)
+	)
+)
+
+9)
+P <nombrePais1, nombrePais2> (
+	Pais |x| <gradoCorrupcion = gradoCorrupcion2 + 2> (
+		R <
+		codPais2,
+		nombrePais2,
+		continente2,
+		gradoCorrupcion2
+		> Pais
+	)
+)
