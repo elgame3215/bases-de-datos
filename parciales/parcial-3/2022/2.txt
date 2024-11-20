@@ -1,0 +1,86 @@
+DETENCIONES <
+	pasaporteHincha, apodoHincha, paisHincha, equipoHincha,
+	nombreMundial, idPartido, servicioSeguridad, ubicacionEntrada,
+	nombreCancha, capacidadCancha, ciudadCancha,
+	fechaDetencion, aeropuertoDeportacion
+>
+
+DFs:
+1) pasaporteHincha -> apodoHincha, paisHincha, equipoHincha (parcial)
+2) nombreMundial, idPartido -> nombreCancha, servicioSeguridad (parcial)
+3) nombreCancha -> capacidadCancha, ciudadCancha (transitiva)
+4) nombreMundial, idPartido, pasaporteHincha -> ubicacionEntrada (parcial)
+5) nombreMundial, pasaporteHincha -> fechaDetencion, aeropuertoDeportacion (parcial)
+
+determino la clave de la relación DETENCIONES
+<pasaporteHincha, nombreMundial, idPartido, nombreCancha>
+-
+<apodoHincha, paisHincha, equipoHincha, nombreCancha, servicioSeguridad, capacidadCancha, ciudadCancha, ubicacionEntrada, fechaDetencion, aeropuertoDeportacion>
+=
+<pasaporteHincha, nombreMundial, idPartido>
+
+DETENCIONES <
+	pasaporteHincha (PK), nombreMundial (PK), idPartido (PK),
+	apodoHincha, paisHincha, equipoHincha,
+	servicioSeguridad, ubicacionEntrada,
+	nombreCancha, capacidadCancha, ciudadCancha,
+	fechaDetencion, aeropuertoDeportacion
+>
+
+
+DETENCIONES no esta en 2FN, ya que tiene dependencias parciales
+
+aplico DF1 sobre DETENCIONES
+HINCHA <pasaporteHincha (PK), apodoHincha, paisHincha, equipoHincha>
+
+HINCHA esta en 2FN, porque solo vale la DF1 y es total.
+
+residual1 <pasaporteHincha (PK), nombreMundial (PK), idPartido (PK),
+	servicioSeguridad, ubicacionEntrada,
+	nombreCancha, capacidadCancha, ciudadCancha,
+	fechaDetencion, aeropuertoDeportacion
+>
+
+residual1 no esta en 2FN, ya que tiene dependencias parciales
+
+aplico DF2 (y DF3 por transitiva) sobre residual1
+
+PARTIDOTEMP <nombreMundial (PK), idPartido (PK),
+	nombreCancha, capacidadCancha, ciudadCancha,
+	servicioSeguridad
+>
+
+PARTIDOTEMP esta en 2FN porque vale DF2 y es total, pero no en 3FN porque vale DF3 que es transitiva
+
+residual2 <pasaporteHincha (PK), nombreMundial (PK), idPartido (PK),
+	ubicacionEntrada,
+	fechaDetencion, aeropuertoDeportacion
+>
+
+residual2 no esta en 2FN porque valen dependencias parciales
+
+aplico DF4 sobre residual2
+
+HINCHA-PARTIDO <nombreMundial (PK), idPartido (PK), pasaporteHincha (PK),
+	ubicacionEntrada
+>
+
+HINCHA-PARTIDO esta en 2FN porque vale DF4 que es total
+
+residual3 <pasaporteHincha (PK), nombreMundial (PK), idPartido (PK),
+	fechaDetencion, aeropuertoDeportacion
+>
+
+residual3 no esta en FN2 porque valen dependencias parciales
+
+aplico DF5 sobre residual3
+
+DETENCION <nombreMundial (PK), pasaporteHincha(PK),
+	fechaDetencion, aeropuertoDeportacion
+>
+
+DETENCION esta en 2FN porque vale DF5 y es total
+
+residual4 <pasaporteHincha (PK), nombreMundial (PK), idPartido (PK)>
+
+residual4 esta en 2FN porque no tiene dependencias parciales

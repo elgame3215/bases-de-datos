@@ -1,0 +1,11 @@
+PELICULA <Película (PK), {Actores}, {Categorías}, Año, Estreno, (Oferta_Canal, Oferta_Precio), Director>
+
+PELICULA no esta en 1FN porque tiene atributos compuestos (Oferta) y multivaluados (Actores y Categorias)
+
+PELICULA_ACTOR <Película (PK, FK), Actor (PK)> vale 1FN porque solo tiene atributos atomicos
+
+PELICULA_CATEGORIA <Película (PK, FK), Categoria (PK)> vale 1FN porque solo tiene atributos atomicos
+
+PELICULA_OFERTA <Película (PK, FK), Canal, Precio> vale 1FN porque solo tiene atributos atomicos
+
+PELICULA <Película (PK), Año, Estreno, Director> vale 1FN porque solo tiene atributos atomicos

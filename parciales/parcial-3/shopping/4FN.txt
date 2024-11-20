@@ -1,0 +1,47 @@
+TURISMO <shopping,
+	comercio,	auspiciante, inversiónAnual, descuento,
+	souvenir, servicio, CUITDueño
+	producto, precioLista,
+	CUIT_Cliente, precioPagado,
+	youtuber, #likes, facturaciónAnual,
+	municipio, DNI_constructor, #obrasConstruidas, empresaConstructora,
+	tarjetaDeCliente, fechaVto, codigo_seguridad, empresaTarjeta,
+>
+
+DMs
+1) shopping ->> servicio
+2) shopping, auspiciante ->> souvenir
+3) shopping, comercio ->> CUITDueño
+
+agrego los nuevos atributos primos a residual5
+
+residual6 <shopping (PK, FK), auspiciante (PK, FK), comercio (PK, FK), producto (PK, FK), CUIT_Cliente (PK, FK),
+	servicio (PK), souvenir (PK), CUITDueño (PK)
+>
+> vale hasta FN3 porque no valen DF parciales ni transitivas, pero valen multivaluadas no triviales (DM1, DM2, DM3)
+
+aplico DM1 sobre residual6
+
+SERVICIO <shopping (PK, FK), servicio (PK)> vale hasta 4FN, porque solo vale DM1 (trivial)
+
+residual7 <shopping (PK, FK), auspiciante (PK, FK), comercio (PK, FK), producto (PK, FK), CUIT_Cliente (PK, FK),
+	souvenir (PK), CUITDueño (PK)
+> vale hasta 3FN porque no valen DF parciales ni transitivas, pero valen multivaluadas no triviales (DM2, DM3)
+
+aplico DM2 sobre residual7
+
+SOUVENIR <shopping (PK, FK), auspiciante (PK, FK),
+	souvenir (PK),
+> vale hasta 4FN porque solo vale DM2 (trivial)
+
+residual8 <shopping (PK, FK), auspiciante (PK, FK), comercio (PK, FK), producto (PK, FK), CUIT_Cliente (PK, FK),
+	CUITDueño (PK)
+> vale hasta 3FN porque no valen DF parciales ni transitivas, pero valen multivaluadas no triviales (DM3)
+
+aplico DM3 sobre residual8
+
+DUEÑO <shopping (PK, FK), comercio (PK, FK),
+	CUITDueño (PK)
+> vale hasta 4FN porque solo vale DM3 (trivial)
+
+residual9 <shopping (PK, FK), auspiciante (PK, FK), comercio (PK, FK), producto (PK, FK), CUIT_Cliente (PK, FK)>

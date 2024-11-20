@@ -1,0 +1,103 @@
+GAMERALL  <nombreConsola, memoriaInterna, memoriaRam, empresaDesarrolladora,
+	nombreVideojuego, fechaLanzamiento, precioLanzamiento, formato, precioVenta, fechaVenta,
+	añoFundacion, fundador, sedeCentral, idUsuario, fechaDeLista, tarjetaCredito, clubDescuento,
+	porcentajeDescuento
+>
+
+DFs
+1) nombreConsola -> memoriaInterna, memoriaRam, empresaDesarrolladora (parcial)
+2) empresaDesarrolladora -> añoFundacion, fundador, sedeCentral (transitiva)
+3) nombreConsola, nombreVideojuego -> fechaLanzamiento, precioLanzamiento, formato (parcial)
+4) nombreConsola, nombreVideojuego, fechaVenta -> precioVenta (parcial)
+5) nombreConsola, nombreVideojuego, idUsuario -> fechaDeLista, tarjetaCredito (parcial)
+6) nombreConsola, idUsuario, clubDescuento  -> porcentajeDescuento (parcial)
+
+determino la PK de GAMERALL
+
+PK =  <nombreConsola, empresaDesarrolladora, nombreVideojuego, fechaVenta, idUsuario, clubDescuento>
+			-
+			<memoriaInterna, memoriaRam, empresaDesarrolladora, añoFundacion, fundador, sedeCentral, fechaLanzamiento, precioLanzamiento, formato, precioVenta, fechaDeLista, tarjetaCredito, porcentajeDescuento>
+			=
+			<nombreConsola, nombreVideojuego, fechaVenta, idUsuario, clubDescuento>
+
+GAMERALL vale hasta 1FN porque valen dependencias parciales (DF1, DF3, DF4, DF5, DF6)
+
+pasaje de GAMERALL a 2FN
+
+
+
+aplico DF1 (DF2 por transitiva) sobre GAMERALL, genero CONSOLATEMP
+
+CONSOLATEMP <nombreConsola (PK),
+	memoriaInterna, memoriaRam,
+	empresaDesarrolladora, añoFundacion, fundador, sedeCentral
+> vale hasta 2FN porque vale DF1 (total) y DF2 (transitiva)
+
+residual1 <nombreConsola (PK, FK), nombreVideojuego (PK), fechaLanzamiento, precioLanzamiento, formato, precioVenta, fechaVenta (PK),
+	idUsuario (PK), fechaDeLista, tarjetaCredito, clubDescuento (PK),
+	porcentajeDescuento
+> vale hasta 1FN porque valen DFs parciales (DF3, DF4, DF5, DF6)
+
+
+
+aplico DF3 sobre residual1, genero LANZAMIENTO
+
+LANZAMIENTO <nombreConsola (PK), nombreVideojuego (PK),
+	fechaLanzamiento, precioLanzamiento, formato
+> vale hasta 3FN porque solo vale DF3 (total)
+
+residual2 <nombreConsola (PK, FK), nombreVideojuego (PK, FK), precioVenta, fechaVenta (PK),
+	idUsuario (PK), fechaDeLista, tarjetaCredito, clubDescuento (PK),
+	porcentajeDescuento
+> vale hasta 1FN porque valen DF parciales (DF4, DF5, DF6)
+
+
+
+aplico DF4 sobre residual2, genero VENTA
+
+VENTA <nombreConsola (PK, FK), nombreVideojuego (PK, FK), fechaVenta (PK),
+	precioVenta
+> vale hasta 3FN porque solo vale DF4 (total)
+
+residual3 <nombreConsola (PK, FK), nombreVideojuego (PK, FK), fechaVenta (PK, FK),
+	idUsuario (PK), fechaDeLista, tarjetaCredito, clubDescuento (PK),
+	porcentajeDescuento
+> vale hasta 1FN porque valen DFs parciales (DF5, DF6)
+
+
+
+aplico DF5 sobre residual3, genero DESEA
+
+DESEA <nombreConsola (PK, FK), nombreVideojuego (PK, FK), idUsuario (PK),
+	fechaDeLista, tarjetaCredito
+> vale hasta 3FN porque solo vale DF5 (total)
+
+residual4 <nombreConsola (PK, FK), nombreVideojuego (PK, FK), fechaVenta (PK, FK),
+	idUsuario (PK), clubDescuento (PK),
+	porcentajeDescuento
+> vale hasta 1FN porque valen DFs parciales (DF6)
+
+
+
+aplico DF6 sobre residual4, genero DESCUENTO
+
+DESCUENTO <nombreConsola (PK, FK), idUsuario (PK, FK), clubDescuento (PK),
+	porcentajeDescuento
+> vale hasta 3FN porque solo vale DF6 (total)
+
+residual5 <nombreConsola (PK, FK), nombreVideojuego (PK, FK), fechaVenta (PK, FK), idUsuario (PK, FK), clubDescuento (PK, FK)> vale hasta 3FN porque no valen DFs parciales ni transitivas
+
+CONSOLATEMP vale hasta 2FN porque vale DF2 (transitiva)
+
+pasaje a 3FN
+
+aplico DF2 sobre residual5, genero EMPRESA
+
+EMPRESA < empresaDesarrolladora (PK),
+	añoFundacion, fundador, sedeCentral
+> vale hasta 3FN porque solo vale DF2 (total)
+
+CONSOLA <nombreConsola (PK),
+	empresaDesarrolladora (FK),
+	memoriaInterna, memoriaRam
+> vale hasta 3FN porque solo vale DF1 (total)

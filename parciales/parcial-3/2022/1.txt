@@ -1,0 +1,6 @@
+La relación no esta en 1FN, porque "Formas de Pago" contiene atributos multivaluados y "Domicilio" es un atributo compuesto
+descompongo "Domicilio" en "Calle" y "Altura" dentro de la misma relación y descompongo "Formas de Pago" en una nueva relación "Paquete-Forma-Pago", cuyo esquema sería <Paquete Turistico (PK, FK), Agencia (PK, FK), Forma de Pago (PK)>
+
+quedando:
+Paquete <Paquete Turistico (PK), Agencia (PK), Calle, Altura, Guia>
+Paquete-Forma-Pago <Paquete Turistico (PK, FK), Agencia (PK, FK), Forma de Pago (PK)>

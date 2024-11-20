@@ -1,0 +1,146 @@
+TURISMO <shopping, comercio, facturaciónAnual, municipio,
+	producto, precioLista, precioPagado,
+	CUIT_Cliente, tarjetaDeCliente, descuento,
+	fechaVto, codigo_seguridad, empresaTarjeta
+	youtuber, #likes,
+	DNI_constructor, #obrasConstruidas, empresaConstructora,
+	auspiciante, inversiónAnual,
+>
+
+DFs
+1) shopping -> municipio, DNI_constructor (parcial)
+2) DNI_constructor -> empresaConstructora, #obrasConstruidas (transitiva)
+3) shopping, auspiciante -> inversiónAnual (parcial)
+4) shopping, comercio -> descuento, youtuber (parcial)
+5) youtuber -> #likes, facturaciónAnual (transitiva)
+6) shopping, comercio, producto -> precioLista (parcial)
+7) shopping, comercio, producto, CUIT_Cliente -> precioPagado, tarjetaDeCliente (parcial)
+8) tarjetaDeCliente -> fechaVto, codigo_seguridad, empresaTarjeta (transitiva)
+
+determino la clave de la relacion TURISMO
+
+PK <shopping, DNI_constructor, auspiciante, comercio, youtuber, producto, CUIT_Cliente, tarjetaDeCliente>
+	-
+	<municipio,
+	DNI_constructor, empresaConstructora, #obrasConstruidas,
+	inversiónAnual,
+	descuento, youtuber, #likes, facturaciónAnual,
+	precioLista, precioPagado,
+	tarjetaDeCliente, fechaVto, codigo_seguridad, empresaTarjeta>
+	=
+	<shopping, auspiciante, comercio, producto, CUIT_Cliente>
+
+pasaje a 2FN
+
+TURISMO <shopping (PK), auspiciante (PK), comercio (PK), producto(PK), CUIT_Cliente (PK),
+	municipio,
+	DNI_constructor, empresaConstructora, #obrasConstruidas,
+	inversiónAnual,
+	descuento, youtuber, #likes, facturaciónAnual,
+	precioLista, precioPagado,
+	tarjetaDeCliente, fechaVto, codigo_seguridad, empresaTarjeta>
+> no esta en 2FN porque valen dependencias parciales
+
+
+aplico DF1 (y DF2 por transitiva) sobre TURISMO
+
+SHOPPINGTEMP <shopping (PK), municipio,
+	DNI_constructor, empresaConstructora, #obrasConstruidas
+> vale hasta 2FN, porque no valen dependencias parciales pero si transitivas (DF2)
+
+residual1 <shopping (PK, FK), auspiciante (PK), comercio (PK), producto(PK), CUIT_Cliente (PK),
+	inversiónAnual,
+	descuento, youtuber, #likes, facturaciónAnual,
+	precioLista, precioPagado,
+	tarjetaDeCliente, fechaVto, codigo_seguridad, empresaTarjeta
+> vale hasta 1FN, porque valen dependencias parciales
+
+
+aplico DF3 sobre residual1
+
+AUSPICIA <shopping (PK, FK), auspiciante(PK),
+	inversiónAnual
+> vale hasta 3FN, porque no valen dependencias parciales ni transitivas
+
+residual2 <shopping (PK, FK), auspiciante (PK, FK), comercio (PK), producto(PK), CUIT_Cliente (PK),
+	descuento, youtuber, #likes, facturaciónAnual,
+	precioLista, precioPagado,
+	tarjetaDeCliente, fechaVto, codigo_seguridad, empresaTarjeta
+> vale hasta 1FN, porque valen dependencias parciales
+
+
+aplico DF4 (y DF5 por transitiva) sobre residual2
+
+COMERCIOTEMP <shopping (PK, FK), comercio(PK),
+	descuento,
+	youtuber, #likes, facturaciónAnual
+> vale hasta 2FN, porque no valen dependencias parciales, pero si transitivas (DF5)
+
+residual3 <shopping (PK, FK), auspiciante (PK, FK), comercio (PK, FK), producto(PK), CUIT_Cliente (PK),
+	precioLista,
+	precioPagado,
+	tarjetaDeCliente, fechaVto, codigo_seguridad, empresaTarjeta
+> vale hasta 1FN, porque valend dependencias parciales
+
+
+aplico DF6 sobre residual3
+
+PRODUCTO <shopping (PK, FK), comercio(PK, FK), producto(PK),
+	precioLista
+> vale hasta 3FN, porque no valen dependencias parciales ni transitivas
+
+residual4 <shopping (PK, FK), auspiciante (PK, FK), comercio (PK, FK), producto(PK, FK), CUIT_Cliente (PK),
+	precioPagado,
+	tarjetaDeCliente, fechaVto, codigo_seguridad, empresaTarjeta
+> vale hasta 1FN, porque valen dependencias parciales
+
+
+aplico DF7 (y DF8 por transitiva) sobre residual4
+
+COMPRATEMP <shopping (PK, FK), comercio (PK, FK), producto (PK, FK), CUIT_Cliente (PK),
+	precioPagado,
+	tarjetaDeCliente, fechaVto, codigo_seguridad, empresaTarjeta
+> vale hasta 2FN, porque no valen dependencias parciales pero si transitivas (DF8)
+
+residual5 <shopping (PK, PK), auspiciante (PK, FK), comercio (PK, PK), producto(PK, PK), CUIT_Cliente (PK, FK)> vale 3FN porque vale refelxividad
+
+3FN: residual5, AUSPICIA, PRODUCTO
+
+2FN: SHOPPINGTEMP, COMERCIOTEMP, COMPRATEMP
+
+pasaje a 3FN
+
+aplico DF2 sobre SHOPPINGTEMP
+
+CONSTRUCTOR <DNI_constructor (PK),
+	empresaConstructora, #obrasConstruidas
+> vale hasta 3FN porque no valen dependencias transitivas
+
+SHOPPING <shopping (PK),
+	 municipio,
+	 DNI_constructor (FK)
+> vale 3FN porque solo vale DF1 (total), y no valen dependencias transitivas
+
+
+aplico DF5 sobre COMERCIOTEMP
+
+YOUTUBER <youtuber (PK),
+	#likes, facturaciónAnual
+> vale 3FN porque solo vale DF5 (total) y no valen dependencias transitivas
+
+COMERCIO <shopping (PK, FK), comercio (PK),
+	descuento,
+	youtuber (FK)
+> vale 3FN porque solo vale DF4 (total) y no valen dependencias transitivas
+
+
+aplico DF8 sobre COMPRATEMP
+
+TARJETA <tarjetaDeCliente (PK),
+	fechaVto, codigo_seguridad, empresaTarjeta
+> vale 3FN porque solo vale DF8 y no valen dependencias transitivas
+
+COMPRA <shopping (PK, FK), comercio (PK, FK), producto (PK, FK), CUIT_Cliente (PK),
+	precioPagado,
+	tarjetaDeCliente (FK)
+> vale 3FN porque solo vale DF7 (total) y no valen dependencias transitivas

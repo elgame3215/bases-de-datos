@@ -1,0 +1,23 @@
+GASTO <codCiudad (PK), codOf. (PK),
+	sector, Depósito, gerente,
+	{recursos},
+	(gasto)
+> no vale 1FN porque tiene atributos multivaluados (recursos) y compuestos (gasto)
+
+descompongo "gasto" en gasto_motivo, gasto_monto
+GASTO <codCiudad (PK), codOf. (PK),
+	sector, Depósito, gerente,
+	{recursos},
+	gasto_motivo, gasto_monto
+> no vale 1FN porque tiene atributos multivaluados (recursos)
+
+descompongo "recursos" y genero RECURSO
+
+RECURSO <codCiudad (PK, FK), codOf. (PK, FK), recurso (PK)>
+
+GASTO <codCiudad (PK), codOf. (PK),
+	sector, Depósito, gerente,
+	gasto_motivo, gasto_monto
+>
+
+ambas relaciones estan en 1FN porque todos sus atributos son atomicos
